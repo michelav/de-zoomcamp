@@ -1,0 +1,19 @@
+.DS_Store
+.idea
+*.tfstate
+*.tfstate.*
+**.terraform
+**.terraform.lock.*
+**_creds.json
+**logs/
+**.env
+**__pycache__/
+**/pgdata
+.vscode
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py

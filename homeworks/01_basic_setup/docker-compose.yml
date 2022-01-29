@@ -1,0 +1,28 @@
+version: '3'
+services:
+  pgdb:
+    image: postgres:14.1-bullseye
+    user: "${UID}:${GID}"
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASS}
+      - POSTGRES_DB=${PG_DB}
+    volumes:
+      - "./pgdata:/var/lib/postgresql/data:rw"
+    ports:
+      - "5432:5432"
+    networks:
+      - dezoomcampnet
+  jupyter:
+    image: jupyter/scipy-notebook
+    volumes:
+      - "./:/home/jovyan/work/:rw"
+    ports:
+      - "8888:8888"
+    entrypoint: "start.sh jupyter lab --LabApp.token='letmein' --LabApp.allow_origin='*' --LabApp.allow_remote_access='True' --LabApp.disable_check_xsrf='True'"
+    networks:
+      - dezoomcampnet
+networks:
+  dezoomcampnet:
+
+    
