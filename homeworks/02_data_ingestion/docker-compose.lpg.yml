@@ -1,0 +1,23 @@
+version: '3'
+services:
+  pgdb:
+    image: postgres:14.1-bullseye
+    user: "${UID}:${GID}"
+    environment:
+      - POSTGRES_USER=${LPG_USER:-dezoomcamp}
+      - POSTGRES_PASSWORD=${LPG_PASS:-dezoomcamp}
+      - POSTGRES_DB=${LPG_DB:-taxi_db}
+    volumes:
+      - "./pg_data:/var/lib/postgresql/data:rw"
+    ports:
+      - "5433:5432"
+  docker-proxy:
+    image: alpine/socat
+    command: "-v TCP4-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock"
+    ports:
+      - "2376:2375"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+networks:
+  default:
+    name: airflow-local-net
