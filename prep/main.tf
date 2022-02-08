@@ -16,9 +16,18 @@ variable "vm_image" {
   description = "SO Image to be used"
 }
 
+variable "control_machine_svc_acc" {
+  description = "Service Account e-mail to be set in GCS VM"
+}
+
 variable "machine_type" {
   description = "Machine specs to be used"
   default = "e2-standard-2"
+}
+
+variable "elt_bucket_name" {
+  description = "Bucket Name"
+  default = "de-zoomcamp-area"
 }
 
 provider "google" {
@@ -48,6 +57,18 @@ resource "google_compute_instance" "control_machine" {
       type  = "pd-ssd"
     }
   }
+
+  service_account {
+    # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
+    email  = var.control_machine_svc_acc
+    scopes = ["cloud-platform"]
+  }
+}
+
+resource "google_storage_bucket" "elt_bucket" {
+  name                        = var.elt_bucket_name
+  location                    = var.region
+  uniform_bucket_level_access = true
 }
 
 output "control_machine_address" {

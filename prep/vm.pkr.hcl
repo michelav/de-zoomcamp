@@ -8,7 +8,7 @@ packer {
 }
 
 variable "project_id" {
-  type    = string
+  type = string
 }
 
 variable "source_image_family" {
@@ -22,11 +22,11 @@ variable "zone" {
 }
 
 variable "ssh_username" {
-  type    = string
+  type = string
 }
 
 variable "ssh_private_key_file" {
-  type    = string
+  type = string
 }
 
 variable "machine_type" {

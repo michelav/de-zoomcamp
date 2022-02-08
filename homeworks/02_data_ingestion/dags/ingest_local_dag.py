@@ -20,21 +20,6 @@ default_args = {
     'depends_on_past': False,
     'email_on_failure': False,
     'email_on_retry': False,
-    # 'retries': 3,
-    # 'retry_delay': timedelta(minutes=5),
-    # 'queue': 'bash_queue',
-    # 'pool': 'backfill',
-    # 'priority_weight': 10,
-    # 'end_date': datetime(2016, 1, 1),
-    # 'wait_for_downstream': False,
-    # 'dag': dag,
-    # 'sla': timedelta(hours=2),
-    # 'execution_timeout': timedelta(seconds=300),
-    # 'on_failure_callback': some_function,
-    # 'on_success_callback': some_other_function,
-    # 'on_retry_callback': another_function,
-    # 'sla_miss_callback': yet_another_function,
-    # 'trigger_rule': 'all_success'
 }
 
 @dag(default_args=default_args,
@@ -42,7 +27,7 @@ default_args = {
     description='DAG that loads NY Taxi CSV data into a local Postgresql database',
     schedule_interval='0 8 2 1-3 *',
     tags=['dezoomcamp', 'homework', 'w2'])
-def NyTaxiDAG():
+def ingest_data_local_pg_dag():
 
     URL = f'https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_{MONTH}.csv'
     OUTPUT_FILE = f'{AIRFLOW_DATA}/taxi_data_{MONTH}.csv'
@@ -50,7 +35,7 @@ def NyTaxiDAG():
 
     download_taxi_data = BashOperator(
         task_id='download_taxi_data',
-        bash_command=f'curl -sSL {URL} -o {OUTPUT_FILE}',
+        bash_command=f'curl -sSLf {URL} -o {OUTPUT_FILE}',
     )
 
     print('The URL is: ' + URL)
@@ -91,23 +76,6 @@ def NyTaxiDAG():
         do_xcom_push=True
     )
 
-    # @task.docker(
-    #     image="ingest_data",
-    #     container_name='TASK__INGEST_TAXI_DATA',
-    #     network_mode="bridge",
-    #     docker_url="tcp://docker-proxy:2375",
-    #     mount_tmp_dir= True,
-    #     tmp_dir='/tmp/airflow',
-    #     mounts=[
-    #         Mount(source=f'{LOCAL_STORAGE}', target=f'{AIRFLOW_DATA}', type='bind')
-    #     ]
-    # )
-    # def ingest_taxi_data():
-    #     TABLE_NAME = f'taxi_data_{MONTH}'
-
-    #     create_taxi_table(DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME, TABLE_NAME, OUTPUT_FILE)
-    #     csv_2_sql(DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME, TABLE_NAME, OUTPUT_FILE)
-
     download_taxi_data >> t_load
 
-dag = NyTaxiDAG()
+dag = ingest_data_local_pg_dag()
