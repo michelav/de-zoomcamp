@@ -1,35 +1,3 @@
-variable "project" {
-  description = "GCP project ID"
-}
-
-variable "region" {
-  description = "GCP Region"
-  default     = "southamerica-west1"
-}
-
-variable "zone" {
-  description = "GCP Zone"
-  default     = "southamerica-west1-a"
-}
-
-variable "vm_image" {
-  description = "SO Image to be used"
-}
-
-variable "control_machine_svc_acc" {
-  description = "Service Account e-mail to be set in GCS VM"
-}
-
-variable "machine_type" {
-  description = "Machine specs to be used"
-  default = "e2-standard-2"
-}
-
-variable "elt_bucket_name" {
-  description = "Bucket Name"
-  default = "de-zoomcamp-area"
-}
-
 provider "google" {
   project     = var.project
   region      = var.region
@@ -38,12 +6,12 @@ provider "google" {
 resource "google_compute_instance" "control_machine" {
   name                      = "de-control-machine"
   machine_type              = var.machine_type
-  tags                      = ["tf-created", "de-zoomcamp"]
+  tags                      = ["web", "ssh"]
   zone                      = var.zone
   allow_stopping_for_update = true
 
   network_interface {
-    network = "default"
+    subnetwork = google_compute_subnetwork.zoomcamp_subnet.name
 
     access_config {
       // Ephemeral public IP
@@ -69,9 +37,4 @@ resource "google_storage_bucket" "elt_bucket" {
   name                        = var.elt_bucket_name
   location                    = var.region
   uniform_bucket_level_access = true
-}
-
-output "control_machine_address" {
-  description = "Control Machine IP"
-  value       = google_compute_instance.control_machine.network_interface.0.access_config.0.nat_ip
 }

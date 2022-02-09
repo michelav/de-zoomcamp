@@ -59,8 +59,11 @@ build {
     inline = [
       "wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh",
       "sh miniconda.sh -b -p $HOME/miniconda && $HOME/miniconda/bin/conda init",
-      "echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections && sudo apt-get update && sudo apt-get install -y docker.io docker-compose git",
-      "sudo usermod -aG docker ${var.ssh_username}"
+      "echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections && sudo apt-get update && sudo apt-get install -y docker.io git",
+      "sudo usermod -aG docker ${var.ssh_username}",
+      "sudo mkdir -p /usr/local/lib/docker/cli-plugins/",
+      "sudo curl -SL https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose",
+      "sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose"
     ]
   }
 }
