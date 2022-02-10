@@ -6,6 +6,7 @@ from airflow.operators.bash import BashOperator
 from docker.types import Mount
 
 AIRFLOW_DATA = os.environ.get('AIRFLOW_DATA', '/opt/airflow/data')
+HOST_DIR = os.environ.get('HOST_DIR')
 LOCAL_STORAGE = os.environ.get('LOCAL_STORAGE')
 DB_USER = os.environ.get('LPG_USER')
 DB_PASS = os.environ.get('LPG_PASS')
@@ -47,9 +48,9 @@ def ingest_data_local_pg_dag():
         auto_remove=False,
         docker_url="tcp://docker-proxy:2375",
         image="ingest_data",
-        network_mode="airflow-local-net",
+        network_mode="airflow-net",
         mounts=[
-                Mount(source=f'{LOCAL_STORAGE}', target=f'{AIRFLOW_DATA}', type='bind')
+                Mount(source=f'{HOST_DIR}/{LOCAL_STORAGE}', target=f'{AIRFLOW_DATA}', type='bind')
         ],
         command=[
             "python3",

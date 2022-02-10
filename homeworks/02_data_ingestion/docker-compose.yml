@@ -58,16 +58,21 @@ x-airflow-common:
     AIRFLOW__API__AUTH_BACKEND: 'airflow.api.auth.backend.basic_auth'
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
     AIRFLOW__CORE__ENABLE_XCOM_PICKLING: 'true'
+    AIRFLOW__CORE__PARALLELISM: ${AIRFLOW__CORE__PARALLELISM:-16}
+    AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG: ${AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG:-8}
+    AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG: ${AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG:-4}
     AIRFLOW_DATA: ${AIRFLOW_DATA:-/opt/airflow/data}
-    LOCAL_STORAGE: ${LOCAL_STORAGE:-./data}
+    LOCAL_STORAGE: ${LOCAL_STORAGE:-data}
     LPG_USER: ${LPG_USER}
     LPG_PASS: ${LPG_PASS}
     LPG_DB: ${LPG_DB}
+    HOST_DIR: ${HOST_DIR}
+    BUCKET_NAME: ${BUCKET_NAME}
   volumes:
     - ./dags:/opt/airflow/dags
-    - ./logs:/opt/airflow/logs
-    - ./plugins:/opt/airflow/plugins
-    - "${LOCAL_STORAGE}:${AIRFLOW_DATA}"
+    - "${HOST_DIR}/logs:/opt/airflow/logs"
+    - "${HOST_DIR}/plugins:/opt/airflow/plugins"
+    - "${HOST_DIR}/${LOCAL_STORAGE}:${AIRFLOW_DATA}"
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -277,6 +282,6 @@ volumes:
   postgres-db-volume:
 networks:
   default:
-    name: airflow-local-net
+    name: airflow-net
 
 

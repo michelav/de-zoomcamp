@@ -1,4 +1,5 @@
 import logging
+import os
 import argparse
 
 
@@ -34,10 +35,12 @@ def upload_to_gcs(params):
     storage.blob._DEFAULT_CHUNKSIZE = 5 * 1024 * 1024  # 5 MB
     # End of Workaround
 
+    blob_name = os. path. basename(params.source)
+
     client = storage.Client()
     bucket = client.bucket(params.dest)
 
-    blob = bucket.blob(params.name)
+    blob = bucket.blob(blob_name)
     blob.upload_from_filename(params.source)
 
 route = {
@@ -50,7 +53,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--source', help='the csv file name', required=True)
     parser.add_argument('--dest', help='the bucket destination', required=False)
-    parser.add_argument('--name', help='the object name', required=False)
+    # parser.add_argument('--name', help='the object name', required=False)
     parser.add_argument('operation', help='Operation to be performed', choices=['parquet', 'transfer'])
 
     args = parser.parse_args()

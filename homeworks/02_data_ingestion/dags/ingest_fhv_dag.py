@@ -17,8 +17,8 @@ DB_NAME = os.environ.get('LPG_DB')
 BUCKET_NAME = os.environ.get('BUCKET_NAME')
 MONTH = '{{ macros.ds_format(ds, \"%Y-%m-%d\", \"%Y-%m\") }}'
 
-URL = f'https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_{MONTH}.csv'
-FILE_NAME = f"taxi_data_{MONTH}"
+URL = f'https://nyc-tlc.s3.amazonaws.com/trip+data/fhv_tripdata_{MONTH}.csv'
+FILE_NAME = f"fhv_{MONTH}"
 CSV_FILE = f'{AIRFLOW_DATA}/{FILE_NAME}.csv'
 PARQUET_FILE = f'{AIRFLOW_DATA}/{FILE_NAME}.parquet'
 
@@ -34,14 +34,14 @@ default_args = {
 
 @dag(default_args=default_args,
     start_date=datetime(2019, 1, 1),
-    end_date=datetime(2020, 12, 31),
-    description='DAG that loads NY Taxi CSV data into GCS Bucket',
+    end_date=datetime(2019, 12, 31),
+    description='DAG that loads FHV data into GCS Bucket',
     schedule_interval='0 8 2 1-12 *',
     tags=['dezoomcamp', 'homework', 'w2', 'gcs'])
-def ingest_data_gcs_dag():
+def ingest_fhv_gcs_dag():
 
-    download_taxi_data = BashOperator(
-        task_id='download_taxi_data',
+    download_fhv_data = BashOperator(
+        task_id='download_fhv_data',
         bash_command=f'curl -sSLf {URL} -o {CSV_FILE}',
     )
 
@@ -60,9 +60,9 @@ def ingest_data_gcs_dag():
             f"{CSV_FILE}",
             "parquet"
         ],
-        task_id="parquet_taxi_data",
+        task_id="parquet_fhv_data",
         mount_tmp_dir= False,
-        container_name=f"TASK__PARQUET_TAXI_DATA_{MONTH}",
+        container_name=f"TASK__PARQUET_FHV_DATA_{MONTH}",
         do_xcom_push=True
     )
 
@@ -83,12 +83,12 @@ def ingest_data_gcs_dag():
             f"{BUCKET_NAME}",
             "transfer"
         ],
-        task_id="transfer_parquet_taxi_data",
+        task_id="transfer_parquet_fhv_data",
         mount_tmp_dir= False,
-        container_name=f"TASK__TRANSFER_TAXI_DATA_{MONTH}",
+        container_name=f"TASK__TRANSFER_FHV_DATA_{MONTH}",
         do_xcom_push=True
     )
 
-    download_taxi_data >> t_parquet >> t_transfer # pylint: disable=W0104
+    download_fhv_data >> t_parquet >> t_transfer # pylint: disable=W0104
 
-GCS_DAG = ingest_data_gcs_dag()
+FHV_DAG = ingest_fhv_gcs_dag()
