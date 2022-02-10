@@ -22,12 +22,12 @@ variable "control_machine_svc_acc" {
 
 variable "machine_type" {
   description = "Machine specs to be used"
-  default = "e2-standard-2"
+  default     = "e2-standard-2"
 }
 
 variable "elt_bucket_name" {
   description = "Bucket Name"
-  default = "de-zoomcamp-area"
+  default     = "de-zoomcamp-area"
 }
 
 variable "ip_cidr_range" {
@@ -36,5 +36,5 @@ variable "ip_cidr_range" {
 }
 
 variable "ssh_username" {
-    default="de_camp"
+  default = "de_camp"
 }

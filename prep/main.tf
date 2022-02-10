@@ -1,6 +1,6 @@
 provider "google" {
-  project     = var.project
-  region      = var.region
+  project = var.project
+  region  = var.region
 }
 
 resource "google_compute_instance" "control_machine" {
