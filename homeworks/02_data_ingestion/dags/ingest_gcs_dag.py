@@ -47,7 +47,7 @@ def ingest_data_gcs_dag():
         auto_remove=False,
         docker_url="tcp://docker-proxy:2375",
         image="elt_gcs",
-        network_mode="airflow-net",
+        network_mode="airflow-local-net",
         mounts=[
                 Mount(source=f'{LOCAL_STORAGE}', target=f'{AIRFLOW_DATA}', type='bind')
         ],
@@ -68,7 +68,7 @@ def ingest_data_gcs_dag():
         auto_remove=False,
         docker_url="tcp://docker-proxy:2375",
         image="elt_gcs",
-        network_mode="airflow-net",
+        network_mode="airflow-local-net",
         mounts=[
                 Mount(source=f'{LOCAL_STORAGE}', target=f'{AIRFLOW_DATA}', type='bind')
         ],
@@ -83,7 +83,7 @@ def ingest_data_gcs_dag():
             f"{PARQUET_FILE}",
             "parquet"
         ],
-        task_id="parquet_taxi_data",
+        task_id="transfer_parquet_taxi_data",
         mount_tmp_dir= False,
         container_name=f"TASK__TRANSFER_TAXI_DATA_{MONTH}",
         do_xcom_push=True

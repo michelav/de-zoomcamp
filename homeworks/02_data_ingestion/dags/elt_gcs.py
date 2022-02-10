@@ -41,8 +41,8 @@ def upload_to_gcs(params):
     blob.upload_from_filename(params.source)
 
 route = {
-    'taxi': to_parquet,
-    'fvh': upload_to_gcs,
+    'parquet': to_parquet,
+    'transfer': upload_to_gcs,
 }
 
 if __name__ == '__main__':
