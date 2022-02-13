@@ -25,6 +25,11 @@ variable "machine_type" {
   default     = "e2-standard-2"
 }
 
+variable "disk_size" {
+  description = "Machine disk size"
+  default     = 50
+}
+
 variable "elt_bucket_name" {
   description = "Bucket Name"
   default     = "de-zoomcamp-area"

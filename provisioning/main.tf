@@ -21,7 +21,7 @@ resource "google_compute_instance" "control_machine" {
   boot_disk {
     initialize_params {
       image = var.vm_image
-      size  = 20
+      size  = var.disk_size
       type  = "pd-ssd"
     }
   }
