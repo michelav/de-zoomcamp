@@ -1,8 +1,17 @@
+/*
+* Defines mais resources used in Data Engineering ZoomCamp
+*
+*/
+
 provider "google" {
   project = var.project
   region  = var.region
 }
 
+
+/*
+* Remote machine that serves Airflow
+*/
 resource "google_compute_instance" "control_machine" {
   name                      = "de-control-machine"
   machine_type              = var.machine_type
@@ -33,6 +42,9 @@ resource "google_compute_instance" "control_machine" {
   }
 }
 
+/*
+* Storage area for parquet files
+*/
 resource "google_storage_bucket" "elt_bucket" {
   name                        = var.elt_bucket_name
   location                    = var.region

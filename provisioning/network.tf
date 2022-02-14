@@ -1,3 +1,8 @@
+/*
+* Defines network resources, ip allocation mode,
+* and firewall rules for control machine
+*/
+
 resource "google_compute_network" "zoomcamp_vpc" {
   name                    = "zoomcamp-vpc"
   description             = "DE ZoomCamp default VPC"
