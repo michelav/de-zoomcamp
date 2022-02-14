@@ -18,7 +18,7 @@ BUCKET_NAME = os.environ.get('BUCKET_NAME')
 MONTH = '{{ macros.ds_format(ds, \"%Y-%m-%d\", \"%Y-%m\") }}'
 
 URL = 'https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv'
-FILE_NAME = 'taxi_zone_lookup.csv'
+FILE_NAME = 'taxi_zone_lookup'
 CSV_FILE = f'{AIRFLOW_DATA}/{FILE_NAME}.csv'
 PARQUET_FILE = f'{AIRFLOW_DATA}/{FILE_NAME}.parquet'
 
